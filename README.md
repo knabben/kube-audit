@@ -9,6 +9,7 @@ Creating a trusted, immutable and shared tree of events from a Kubernetes cluste
 Build the APIserver image with:
 
 ```
+$ make build-base
 $ make build-apiserver
 ``` 
 
