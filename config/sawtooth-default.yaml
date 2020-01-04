@@ -17,6 +17,10 @@ version: "2.1"
 
 services:
 
+  audit:
+    image: apiserver:latest
+    container_name: apiserver
+
   settings-tp:
     image: hyperledger/sawtooth-settings-tp:chime
     container_name: sawtooth-settings-tp-default
