@@ -18,13 +18,21 @@ version: "2.1"
 services:
   audit:
     image: apiserver:latest
+    expose:
+      - 8080
+    ports:
+      - "8080:8080"
     container_name: apiserver
+    networks:
+      - sawtooth
 
   audit-tp:
     image: tp:latest
     container_name: tp
     environment:
       - VALIDATOR_URL=tcp://validator:4004
+    networks:
+      - sawtooth
 
   settings-tp:
     image: hyperledger/sawtooth-settings-tp:chime
@@ -32,6 +40,8 @@ services:
     depends_on:
       - validator
     entrypoint: settings-tp -vv -C tcp://validator:4004
+    networks:
+      - sawtooth
 
   intkey-tp-python:
     image: hyperledger/sawtooth-intkey-tp-python:chime
@@ -39,6 +49,8 @@ services:
     depends_on:
       - validator
     entrypoint: intkey-tp-python -vv -C tcp://validator:4004
+    networks:
+      - sawtooth
 
   xo-tp-python:
     image: hyperledger/sawtooth-xo-tp-python:chime
@@ -46,6 +58,8 @@ services:
     depends_on:
       - validator
     entrypoint: xo-tp-python -vv -C tcp://validator:4004
+    networks:
+      - sawtooth
 
   validator:
     image: hyperledger/sawtooth-validator:chime
@@ -71,6 +85,8 @@ services:
           --bind network:tcp://eth0:8800 \
           --bind consensus:tcp://eth0:5050 \
         \""
+    networks:
+      - sawtooth
 
   devmode-engine:
     image: hyperledger/sawtooth-devmode-engine-rust:chime
@@ -78,6 +94,8 @@ services:
     depends_on:
       - validator
     entrypoint: devmode-engine-rust -C tcp://validator:5050
+    networks:
+      - sawtooth
 
   rest-api:
     image: hyperledger/sawtooth-rest-api:chime
@@ -87,6 +105,8 @@ services:
     depends_on:
       - validator
     entrypoint: sawtooth-rest-api -C tcp://validator:4004 --bind rest-api:8008
+    networks:
+      - sawtooth
 
   shell:
     image: hyperledger/sawtooth-shell:chime
@@ -97,3 +117,9 @@ services:
         sawtooth keygen && \
         tail -f /dev/null \
         \""
+    networks:
+      - sawtooth
+
+networks:
+  sawtooth:
+    driver: bridge
