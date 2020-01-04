@@ -70,7 +70,7 @@ func CreateTransactionBatch(transactionHeader, payload []byte, signer *signing.S
 // requestServer
 func requestServer(batchList []byte) (*http.Response, error) {
 	return http.Post(
-		"http://localhost:8008/batches",
+		"http://sawtooth-rest-api-default:8008/batches",
 		"application/octet-stream",
 		bytes.NewBuffer(batchList),
 	)
