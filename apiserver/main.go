@@ -5,9 +5,14 @@ import (
 	"context"
 	"net/http"
 	"encoding/json"
+	"os"
 
 	"github.com/go-kit/kit/endpoint"
 	httptransport "github.com/go-kit/kit/transport/http"
+)
+
+var (
+	uri string
 )
 
 type AuditService interface {
@@ -15,6 +20,13 @@ type AuditService interface {
 }
 
 type auditService struct{}
+
+func init() {
+	uri = os.Getenv("REST_URI")
+	if uri == "" {
+		uri = "http://sawtooth-rest-api-default:8008/batches"
+	}
+}
 
 func (auditService) SaveAudit(saveRequest saveRequest) (int, error) {
 	signer := GenerateSigner()

@@ -2,8 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
-
 	"encoding/hex"
 	"github.com/hyperledger/sawtooth-sdk-go/signing"
 	"net/http"
@@ -34,7 +32,6 @@ func CreateTransactionHeader(payloadHash string, addresses []string, signer *sig
 		Outputs:          addresses,
 		PayloadSha512:    payloadHash,
 	}
-	fmt.Println(rawTransactionHeader)
 	return proto.Marshal(&rawTransactionHeader)
 }
 
@@ -70,7 +67,7 @@ func CreateTransactionBatch(transactionHeader, payload []byte, signer *signing.S
 // requestServer
 func requestServer(batchList []byte) (*http.Response, error) {
 	return http.Post(
-		"http://sawtooth-rest-api-default:8008/batches",
+		uri,
 		"application/octet-stream",
 		bytes.NewBuffer(batchList),
 	)
