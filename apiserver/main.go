@@ -1,16 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
-	"encoding/json"
 	"net/http"
 
 	"context"
 	"github.com/go-kit/kit/endpoint"
 	httptransport "github.com/go-kit/kit/transport/http"
-	"k8s.io/api/auditregistration/v1alpha1"
-
 )
 
 type AuditService interface {
@@ -19,20 +17,22 @@ type AuditService interface {
 
 type auditService struct{}
 
-func (auditService) SaveAudit(s v1alpha1.AuditSinkList) (string, error) {
+func (auditService) SaveAudit(saveRequest) (string, error) {
 	return "", nil
 }
 
-
 type saveResponse struct {
+}
 
+type User struct {
+	Username string
 }
 
 type AuditEvent struct {
 	RequestURI         string
 	Verb               string
 	Code               int32
-	User               string
+	User               User
 	ImpersonatedUser   string
 	ImpersonatedGroups string
 	Resource           string
@@ -51,12 +51,11 @@ type saveRequest struct {
 
 func makeSaveEndpoint(svc auditService) endpoint.Endpoint {
 	return func(_ context.Context, request interface{}) (interface{}, error) {
-		req := request.(v1alpha1.AuditSinkList)
+		req := request.(saveRequest)
 		svc.SaveAudit(req)
 		return saveResponse{}, nil
 	}
 }
-
 
 func main() {
 	auditSvc := auditService{}
@@ -73,14 +72,14 @@ func main() {
 
 func decodeSaveRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request = saveRequest{}
-	//
-	//b, _:= ioutil.ReadAll(r.Body)
-	//fmt.Println(string(b))
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
-	fmt.Println(request.Items)
+
+	for _, i := range request.Items {
+		fmt.Println(i.RequestURI, i.Verb, i.User.Username)
+	}
 	return request, nil
 }
 
