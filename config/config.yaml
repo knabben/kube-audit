@@ -2,27 +2,14 @@ kind: Cluster
 apiVersion: kind.sigs.k8s.io/v1alpha3
 nodes:
 - role: control-plane
-  extraMounts:
-  - containerPath: /etc/kubernetes/audit.yaml
-    hostPath: /Users/amimknabben/.projects/kube-config/audit.yaml
-    readOnly: true
-
 kubeadmConfigPatches:
 - |
   apiVersion: kubeadm.k8s.io/v1beta2
   kind: ClusterConfiguration
   metadata:
     name: config
-
   apiServer:
     extraArgs:
       feature-gates: "DynamicAuditing=true"
       audit-dynamic-configuration: "true"
       runtime-config: "auditregistration.k8s.io/v1alpha1=true"
-      audit-policy-file: "/etc/kubernetes/audit.yaml"
-    extraVolumes:
-    - name: "audit"
-      hostPath: "/etc/kubernetes/audit.yaml"
-      mountPath: "/etc/kubernetes/audit.yaml"
-      readOnly: true
-      pathType: File
