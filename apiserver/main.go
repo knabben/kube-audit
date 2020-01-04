@@ -37,6 +37,10 @@ func (auditService) SaveAudit(saveRequest saveRequest) (int, error) {
 	}
 
 	response, err := requestServer(transactionBatch)
+	if err != nil {
+		return 0, err
+	}
+
 	return response.StatusCode, nil
 }
 
