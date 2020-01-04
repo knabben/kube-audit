@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 
 	"encoding/hex"
 	"github.com/hyperledger/sawtooth-sdk-go/signing"
@@ -20,16 +21,6 @@ func GenerateSigner() *signing.Signer {
 	return signing.NewCryptoFactory(ctx).NewSigner(privateKey)
 }
 
-// getPrefix - generates the namespace prefix from constants
-func getPrefix() string {
-	return HexDigest([]byte(FAMILY_NAME))[:FAMILY_NAMESPACE_ADDRESS_LENGTH]
-}
-
-// getAddress - Return the namespaced address
-func getAddress(name string) string {
-	return getPrefix() + HexDigest([]byte(name))[FAMILY_VERB_ADDRESS_LENGTH:]
-}
-
 // CreateTransactionHandler - returns the
 func CreateTransactionHeader(payloadHash string, addresses []string, signer *signing.Signer) ([]byte, error) {
 	publicKey := signer.GetPublicKey().AsHex()
@@ -43,6 +34,7 @@ func CreateTransactionHeader(payloadHash string, addresses []string, signer *sig
 		Outputs:          addresses,
 		PayloadSha512:    payloadHash,
 	}
+	fmt.Println(rawTransactionHeader)
 	return proto.Marshal(&rawTransactionHeader)
 }
 

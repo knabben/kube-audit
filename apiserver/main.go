@@ -18,13 +18,13 @@ type auditService struct{}
 
 func (auditService) SaveAudit(saveRequest saveRequest) (int, error) {
 	signer := GenerateSigner()
-
 	var auditEvent AuditEvent = saveRequest.Items[0]
 
 	payload, err := json.Marshal(auditEvent)
 	if err != nil {
 		return 0, err
 	}
+
 	addresses := []string{getAddress(auditEvent.RequestURI)}
 	header, err := CreateTransactionHeader(HexDigest(payload), addresses, signer)
 	if err != nil {
@@ -36,9 +36,7 @@ func (auditService) SaveAudit(saveRequest saveRequest) (int, error) {
 		return 0, err
 	}
 
-	// Request REST API server
 	response, err := requestServer(transactionBatch)
-
 	return response.StatusCode, nil
 }
 
@@ -57,13 +55,8 @@ type AuditEvent struct {
 	Verb               string
 	Code               int32
 	User               User
-	ImpersonatedUser   string
-	ImpersonatedGroups string
 	Resource           string
 	Namespace          string
-	RequestObject      bool
-	ResponseObject     bool
-	AuthorizeDecision  string
 
 	AdmissionWebhookMutationAnnotations map[string]string
 	AdmissionWebhookPatchAnnotations    map[string]string
