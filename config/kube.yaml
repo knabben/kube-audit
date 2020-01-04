@@ -1,0 +1,15 @@
+apiVersion: auditregistration.k8s.io/v1alpha1
+kind: AuditSink
+metadata:
+  name: mysink
+spec:
+  policy:
+    level: RequestResponse
+    stages:
+    - RequestReceived
+  webhook:
+    throttle:
+      qps: 10
+      burst: 15
+    clientConfig:
+      url: "http://172.17.0.3:8080/"
