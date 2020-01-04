@@ -4,7 +4,8 @@ Dynamic Kubernetes Audit
 To run the APIserver localy, setup the apiserver with:
 
 ```
-$ make; make run
+$ make build-apiserver
+$ make run-apiserver
 docker run -it -p 8080:8080 apiserver:latest
 ``` 
 
