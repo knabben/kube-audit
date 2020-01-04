@@ -16,10 +16,15 @@
 version: "2.1"
 
 services:
-
   audit:
     image: apiserver:latest
     container_name: apiserver
+
+  audit-tp:
+    image: tp:latest
+    container_name: tp
+    environment:
+      - VALIDATOR_URL=tcp://validator:4004
 
   settings-tp:
     image: hyperledger/sawtooth-settings-tp:chime

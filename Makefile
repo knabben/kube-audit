@@ -6,3 +6,6 @@ build-apiserver:
 
 build-tp:
 	docker build -f tp/Dockerfile -t tp:latest .
+
+run:
+	docker-compose -f config/sawtooth-default.yaml up

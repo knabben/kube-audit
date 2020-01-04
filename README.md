@@ -10,6 +10,7 @@ Build the APIserver image with:
 
 ```
 $ make build-base
+$ make build-tp
 $ make build-apiserver
 ``` 
 
