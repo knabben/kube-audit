@@ -1,6 +1,5 @@
-Kubernetes Audit
+Dynamic Kubernetes Audit
 ---
-
 
 To run the APIserver localy, setup the apiserver with:
 
